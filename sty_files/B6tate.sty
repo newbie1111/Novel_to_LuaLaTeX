@@ -1,0 +1,256 @@
+%フォント指定のためのパッケージ
+%\usepackage{luatexja-fontspec}
+%欧文・数字フォント（フォントによっては文字が欠落する場合があるので注意）
+%\setmainfont{TakaoExMincho}
+%\setsansfont{TakaoExMincho}
+%ここで日本語フォント指定 （フォントによっては文字が欠落する場合があるので注意）
+%\setmainjfont{TakaoExMincho}
+%\setsansjfont{TakaoExMincho}
+
+\usepackage{luatexja-otf}
+
+%ルビや傍点　　例 \ruby{山﨑}{やま|さき} 
+\usepackage{pxrubrica}
+
+%表
+\usepackage{longtable}
+\usepackage{booktabs}
+%下線・波線・囲み文字　https://github.com/doraTeX/breakfbox から uline--.sty と breakfbox.sty を入手
+\usepackage[usetype1]{uline--}
+\usepackage{breakfbox}
+%脚注番号を （1）に変更
+\renewcommand\thefootnote{（\arabic{footnote}）}
+%脚注番号を 1）に変更
+%\renewcommand\thefootnote{\arabic{footnote}）}
+
+%リンク しおり
+\usepackage[hidelinks,unicode=true]{hyperref}
+    
+%縦中横数字
+\usepackage{lltjext}
+
+%画像
+%\usepackage[export]{adjustbox}
+\usepackage{graphicx}
+
+%1行目を1文字目インデント
+\usepackage{indentfirst}
+
+% 原稿ページ設定（B6[JIS規格]）
+\paperwidth 128mm
+\paperheight 182mm
+\topmargin -15mm
+\headheight 3mm
+\headsep 7mm
+\oddsidemargin -7mm
+\evensidemargin -8mm
+\textwidth 137mm %縦書なので、これがテキストの「高さ」
+\textheight 93mm %縦書なので、これがテキストの「幅」（行の幅×行数＋行間×行間数）
+\footskip 15mm
+
+\renewcommand{\baselinestretch}{1} %行間
+
+%\pagestyle{bothstyle}
+
+%タイトルページ出力
+\usepackage{titlesec}
+
+%タイトルページの再定義
+\makeatletter
+\if@titlepage
+  \renewcommand{\maketitle}{\begin{titlepage}%
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \let\thanks\p@thanks
+  \let\footnote\thanks
+  \vbox to\textheight\bgroup\tate\hsize\textwidth
+  \null\vfil
+  \vskip 63\p@ %右余白
+  \begin{center}%
+%タイトルと作者を表示
+    {\LARGE \@title}\hspace{4em}{\large \@author \par}%
+%タイトルのみ表示
+%    {\LARGE \@title}%
+  \end{center}\par
+  \vfil{\centering\@thanks}\vfil\null
+  \egroup
+  \end{titlepage}%
+  }%
+\makeatother
+
+%ヘッダー、フッター調整。文字を小さく（\footnotesize）。
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[ol]{\footnotesize\leftmark} %奇数ページ左上に「偶数ページ用の柱＝章」
+\fancyhead[er]{\footnotesize\rightmark} %偶数ページ右上に「奇数ページ用の柱＝節」
+\fancyfoot[ol]{\footnotesize\thepage} %奇数ページ右上にページ番号
+\fancyfoot[er]{\footnotesize\thepage} %偶数ページに右下にページ番号
+
+\renewcommand{\headrulewidth}{0pt} %ヘッダーの下線の太さ
+\renewcommand{\footrulewidth}{0pt} %フッターの下線の太さ
+
+%1頁目を空白ページにしない。\白紙ページにfootnombreスタイルを適用
+\makeatletter
+\def\cleardoublepage{\clearpage
+\if@twoside
+  \ifodd\c@page\else
+      \hbox{}\thispagestyle{footnombre}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+  \fi\fi}
+\makeatother
+
+%footnombre　白紙ページ、各章の最初のページのノンブルを小さく
+\makeatletter
+\def\ps@footnombre{\let\@mkboth\@gobbletwo
+    \let\ps@jpl@in\ps@footnombre
+  \def\@evenfoot{\hfil\footnotesize\thepage}%\footnotesizeで小さく
+  \def\@oddfoot{\footnotesize\thepage\hfil}%\footnotesizeで小さく
+  \let\@oddhead\@empty\let\@evenhead\@empty}
+\let\ps@jpl@in\ps@footnombre
+\makeatother
+
+%%以下、目次のページ設定%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%目次ページのヘッダーを削除。
+\makeatletter
+\renewcommand{\tableofcontents}{%
+  \if@twocolumn\@restonecoltrue\onecolumn
+  \else\@restonecolfalse\fi
+  \chapter*{\contentsname
+    \@mkboth{}{}
+    %\@mkboth{\contentsname}{\contentsname}
+  }\@starttoc{toc}%
+  \if@restonecol\twocolumn\fi
+}
+\makeatother
+
+% hyperref.styの関係で、目次ページ番号が寝てしまうので、正しく縦向きに。　参考：http://id.fnshr.info/2017/05/20/my-latex-templates-201705/
+\makeatletter
+\def\contentsline#1#2#3#4{\csname l@#1\endcsname{\hyper@linkstart{link}{#4}{#2}\hyper@linkend}{\rensuji{#3}}}
+\makeatother
+
+%目次の節以下の点線を3点リーダーに。節（section）以降のページ下余白調整
+\makeatletter
+\def\@dottedtocline#1#2#3#4#5{%
+  \vskip\toclineskip \@plus.2\p@%
+  {\setlength{\parfillskip}{5em}%節（section）以降の下余白
+    \parindent #2\relax\@afterindenttrue
+   \interlinepenalty\@M
+   \leavevmode
+   \@lnumwidth #3\relax
+   \advance\leftskip \@lnumwidth \hbox{}\hskip -\leftskip
+    {#4}\nobreak
+ \leaders\hbox to 3pt{\hfil\raise3pt\hbox{.}\hfil}%
+     \hfill \nobreak\hbox to\@pnumwidth{%
+         \hss\reset@font\rmfamily\small \normalcolor #5}\par}}
+\makeatother
+
+%目次の章（chapter）の設定
+\makeatletter
+\renewcommand*{\l@chapter}[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    \addpenalty{-\@highpenalty}%
+    \addvspace{1.0em \@plus\p@}%目次の行間
+    \begingroup
+      %\parindent\z@ \rightskip\@pnumwidth \parfillskip-\rightskip
+      \setlength{\parindent}{3em}%インデント（上部余白）
+      \setlength{\parfillskip}{5em}%下余白
+      \leavevmode\bfseries
+      \setlength\@lnumwidth{2em}%数字と目次本文との間
+      \advance\leftskip\@lnumwidth \hskip-\leftskip
+      #1\nobreak\hfil\nobreak\hb@xt@\@pnumwidth{\hss#2}\par
+      \penalty\@highpenalty
+    \endgroup
+  \fi}
+\makeatother
+
+%目次の節（section）の設定。
+%\renewcommand*{\l@区分}{\@dottedtocline{レベル}{インデント量}{ラベル幅（数字＋余白）}}
+\makeatletter
+\renewcommand*{\l@section}{\@dottedtocline{1}{4em}{2em}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%脚注のインデント調整
+\renewcommand\thefootnote{\rensuji{\arabic{footnote}}}
+
+\makeatletter
+\long\def\@makefntext#1{\parindent 1em\noindent 
+\@hangfrom{\hbox to 1.8em{\hss{\@makefnmark}}}#1}
+\makeatother
+
+%見出しの数字を変更
+\renewcommand{\thechapter}{\rensuji{\arabic{chapter}}}  %%章レベルをアラビア数字に
+%\renewcommand{\thechapter}{第\rensuji{\arabic{chapter}}章}  %% 第1章
+%\renewcommand{\thechapter}{\Kanji{chapter}}  %% 章レベルを漢数字に
+%\renewcommand{\thechapter}{第\Kanji{chapter}章}  %% 第一章
+%\renewcommand{\thesection}{\rensuji{\arabic{section}}}  %% 節レベルをアラビア数字に
+\renewcommand{\thesection}{\Kanji{section}}  %% 節レベルを漢数字に
+
+%見出しの調整　\fontsize{フォントサイズ}{2行以上になったときの行間}
+\titleformat{\chapter}
+  {\normalfont\fontsize{12}{15}\bfseries}{\thechapter}{1em}{}
+\titleformat{\section}
+  {\normalfont\fontsize{10}{15}\bfseries}{\thesection}{1em}{}
+%見出しの余白調整　
+\titlespacing{\chapter} {0mm} %見出しの上の余白
+    {4.4mm}%見出しの右の余白
+    {9mm}%見出しと本文の余白 
+
+%目次に「第」や「章」をつけない
+\renewcommand{\prepartname}{}
+\renewcommand{\postpartname}{}
+\renewcommand{\prechaptername}{}%章レベルの前
+\renewcommand{\postchaptername}{}%章レベルの後
+
+%写真のキャプションに「図」を入れない
+\renewcommand{\figurename}{}
+
+%画像まわり再定義
+\makeatletter
+\renewcommand{\thefigure}{%
+ %\ifnum\c@chapter>\z@\thechapter{}・\fi\rensuji{\@arabic\c@figure} %%画像のキャプションに余計な文字や数字を入れない
+ }
+\def\fps@figure{tbp}
+\def\ftype@figure{1}
+\def\ext@figure{lof}
+\def\fnum@figure{\figurename\thefigure}
+\makeatother
+
+%キャプションまわりの余白を再定義
+% [Tex tips](http://osksn2.hep.sci.osaka-u.ac.jp/~naga/miscellaneous/tex/tex-tips2.html)を参照のこと
+\abovecaptionskip=-8pt
+
+\makeatletter
+\setlength\belowcaptionskip{0\p@}
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \iftdir\sbox\@tempboxa{#1\hskip1zw#2}%
+    \else\sbox\@tempboxa{#1 #2}%
+  \fi
+  \ifdim \wd\@tempboxa >\hsize
+    \iftdir #1\hskip1zw#2\relax\par
+      \else #1 #2\relax\par\fi
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip
+  }
+\makeatother
+
+%ダッシュをつなげる　参照：https://qiita.com/isari/items/1d0b60b76c7ef168e376
+\usepackage{newunicodechar}
+\makeatletter
+\chardef\my@J@horizbar="2015% Unicodeの2015
+\newunicodechar{―}{\x@my@dash}
+\def\x@my@dash{\@ifnextchar―{%
+  \my@J@horizbar\kern-.5\zw\my@J@horizbar\kern-.5\zw}{%
+    \my@J@horizbar}}
+% 次が―なら2回目のkernまでを、そうでないなら普通の―を出力
+\makeatother
