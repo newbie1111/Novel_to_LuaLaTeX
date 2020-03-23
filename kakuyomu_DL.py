@@ -26,25 +26,6 @@ class kakuyomu_DL():
         text = self.getContents()
         tmp = text.split("<title>")
         tmp = tmp[1].split("</title>")
-<<<<<<< HEAD
-        return tmp[0]
-
-    def getStructure(self):
-
-        content_text = self.getContents()
-        tmp = content_text.split("</title>")
-
-        book_structure = tmp[0].split("<title>")[1]
-        tmp[1] = re.split(
-            "<li class=\"widget-toc-chapter widget-toc-level\d js-vertical-composition-item\">", tmp[1])
-        tmp[1].pop(0)
-
-        # """
-        for str in tmp[1]:
-            print(str)
-            print("\n-------------\n")
-        # """
-=======
         data = tmp[0].split("（")
         data[1] = data[1].replace("） - カクヨム", "")
         return data
@@ -69,7 +50,6 @@ class kakuyomu_DL():
         book_structure = book_structure.replace("\u3000", "")
 
         return book_structure
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
 
     def host_url(self):
         url = self.url
@@ -81,10 +61,6 @@ class kakuyomu_DL():
         result_url = []
         text = self.getContents()
         result = text.split(self.host_url() + "/episodes/")
-<<<<<<< HEAD
-=======
-
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
         for i in range(1, len(result)):
             tmp_url = result[i].split("\"")
             result_url.append(tmp_url[0])
@@ -107,22 +83,10 @@ class kakuyomu_DL():
         text_data = []
 
         for string in response:
-<<<<<<< HEAD
-
-            tmp = string.split(
-                "<p class=\"widget-episodeTitle js-vertical-composition-item\">")
-            output = False
-
-            tmp_title = tmp[1].split("</p>")
-            title = tmp_title[0]  # 話数タイトル
-
-            data = re.split("(<p id=\"p\d*\">)", string)
-=======
 
             output = False
             data = re.split("(<p id=\"p\d*\">)", string)
             title = self.getStructure(data[0])
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
             data.pop(0)
 
             for str in data:
@@ -133,11 +97,7 @@ class kakuyomu_DL():
 
                     # ルビ用の置き換え
                     replace_text = replace_text.replace(
-<<<<<<< HEAD
-                        "<ruby><rb>", "\\ruby{")
-=======
                         "<ruby><rb>", "\\ruby[g]{")
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
                     replace_text = replace_text.replace("</rb><rp>", "}")
                     replace_text = replace_text.replace("（</rp><rt>", "{")
                     replace_text = replace_text.replace("</rt><rp>）", "}")
@@ -145,11 +105,7 @@ class kakuyomu_DL():
 
                     # 傍点用の置き換え
                     replace_text = replace_text.replace(
-<<<<<<< HEAD
-                        "<em class=\"emphasisDots\">", "\\kenten[g]{")
-=======
                         "<em class=\"emphasisDots\">", "\\kenten{")
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
                     replace_text = replace_text.replace("<span>", "")
                     replace_text = replace_text.replace("</span>", "")
                     replace_text = replace_text.replace("</em>", "}")
@@ -159,10 +115,6 @@ class kakuyomu_DL():
                     replace_text = replace_text.replace("<br />", "")
                     replace_text = re.sub(
                         "(<p id=\"p\d*\" class=\"blank\">)", "", replace_text)
-<<<<<<< HEAD
-                    #replace_text = re.sub("(<p id=\"p\d*\" class=\"blank\">)","\\\\\\\\",replace_text)
-=======
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
 
                     # 行頭のタグ削除
                     replace_text = re.sub(
@@ -181,32 +133,16 @@ class kakuyomu_DL():
 
     def save_text(self):
 
-<<<<<<< HEAD
-        text = self.scraiping_Contents()
-        bookTitle = self.getTitle()
-        p = pathlib.Path("./kakuyomu/" + bookTitle)
-
-        # self.getStructure()
-        #print("book title : " + bookTitle)
-=======
         bookData = self.getTitle()
         print("Title : " + bookData[0])
         print("Author : " + bookData[1])
 
         text = self.scraiping_Contents()
         p = pathlib.Path("./kakuyomu/" + bookData[0])
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
 
         if(p.exists() == False):
             p.mkdir(parents=True)
 
-<<<<<<< HEAD
-        for i in text:
-            for title in i.keys():
-                #print(title + "\n-------------------------------------")
-                with open("./kakuyomu/" + bookTitle + "/" + title + ".tex", 'w') as f:
-                    f.write(i[title])
-=======
         novel_data = write_novel.write_novel(
             "./kakuyomu/" + bookData[0], bookData[0], bookData[1])
 
@@ -219,4 +155,3 @@ class kakuyomu_DL():
 
         novel_data.in_footer()
         novel_data.compile_LuaLaTex()
->>>>>>> 95e81cdeaa4c886d7b845645d4b505e04aa1cc27
