@@ -25,9 +25,9 @@ class novel_maker():
             f.write("\\usepackage{B6tate}\n")
             f.write("\\title{" + self.title + "}\n")
             f.write("\\author{" + self.author + "}\n")
-            f.write("\\begin{document}\n")
+            f.write("\n\\begin{document}\n")
             f.write("\\maketitle\n")
-            f.write("\\tableofcontents\n")
+            f.write("\\tableofcontents\n\n")
 
     def set_part(self, name):
         with open(self.save_TeX_file, "a") as f:
@@ -57,7 +57,9 @@ class novel_maker():
         abs_TeX_pass = str(pathlib.Path(self.save_TeX_file).resolve())
         abs_save_dir = str(pathlib.Path(self.save_dirctory).resolve())
 
-        subprocess.run(["lualatex", "-output-directory",
-                        abs_save_dir, abs_TeX_pass])
-        subprocess.run(["lualatex", "-output-directory",
-                        abs_save_dir, abs_TeX_pass])
+        print("")
+        subprocess.run(["lualatex", "-interaction", "batchmode",
+                        "-output-directory", abs_save_dir, abs_TeX_pass])
+        print("")
+        subprocess.run(["lualatex", "-interaction", "batchmode",
+                        "-output-directory", abs_save_dir, abs_TeX_pass])

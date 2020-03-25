@@ -5,7 +5,6 @@ import requests
 import pathlib
 import re
 from bs4 import BeautifulSoup
-import copy
 import novel_maker
 
 # kakuyomu_LuaLaTeX class
@@ -19,8 +18,9 @@ class kakuyomu_LuaLaTeX():
         res = requests.get(url)
 
         if res.status_code == requests.codes.ok:
-            print("exist")
             self.mainSoup = BeautifulSoup(res.text, "html.parser")
+            print("Title  : " + self.get_title())
+            print("Author : " + self.get_author())
         else:
             print("not exist")
             quit()
@@ -52,8 +52,9 @@ class kakuyomu_LuaLaTeX():
         episode_html = [str(html) for html in soup.find_all(
             "p", id=re.compile("\d+"))]
 
-        result = self.get_structure("\n".join(episode_structure))
-        result += self.get_text("\\leavevmode \\\\\n".join(episode_html))
+        result = self.get_structure("".join(episode_structure))
+        result += "\n" + \
+            self.get_text("\\leavevmode \\\\\n".join(episode_html))
 
         return result
 
@@ -61,12 +62,12 @@ class kakuyomu_LuaLaTeX():
     def get_structure(self, text):
         result = text
         result = result.replace(
-            "<p class=\"chapterTitle level1 js-vertical-composition-item\"><span>", "\\chapter{")
+            "<p class=\"chapterTitle level1 js-vertical-composition-item\"><span>", "\n\\chapter{")
         result = result.replace(
-            "<p class=\"chapterTitle level2 js-vertical-composition-item\"><span>", "\\section{")
+            "<p class=\"chapterTitle level2 js-vertical-composition-item\"><span>", "\n\t\\section{")
         result = result.replace(
-            "<p class=\"widget-episodeTitle js-vertical-composition-item\">", "\\subsection{")
-        result = re.sub("</span></p>|</p>", "}\n", result)
+            "<p class=\"widget-episodeTitle js-vertical-composition-item\">", "\n\t\t\\subsection{")
+        result = re.sub("</span></p>|</p>", "}", result)
 
         print(result, end="")
         return result
@@ -97,10 +98,26 @@ class kakuyomu_LuaLaTeX():
         for link in links:
             novel.set_text(self.get_Story(link))
         novel.set_footer()
+
         novel.compile()
 
 
 if __name__ == "__main__":
+    """
+    print("■■■■                                     ■                               ")
+    print("■                          ■■           ■■                               ")
+    print("■                          ■■           ■■■■■■    ■■■■■■■■        ■■     ")
+    print("■            ■             ■■■■■■      ■■   ■            ■        ■      ")
+    print("■            ■          ■■■■    ■     ■■    ■            ■        ■      ")
+    print("■            ■             ■    ■    ■■    ■■            ■       ■■  ■   ")
+    print("■            ■             ■   ■■          ■       ■■■■■■■       ■   ■   ")
+    print("■            ■             ■   ■■         ■■             ■       ■    ■  ")
+    print("■            ■            ■    ■■        ■■              ■      ■    ■■■ ")
+    print("             ■           ■■    ■        ■■        ■■■■■■■■    ■■■■■■■■ ■■")
+    print("             ■          ■■   ■■■       ■                                 ")
+    print("          ■■■■                                         ")
+    """
+    print("Enter the URL of the main page of the work posted on kakuyomu.")
     download_url = input()
     novelData = kakuyomu_LuaLaTeX(download_url)
     novelData.set_novel()
