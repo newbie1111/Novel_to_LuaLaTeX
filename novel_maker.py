@@ -22,7 +22,7 @@ class novel_maker():
     def set_header(self):
         with open(self.save_TeX_file, "w") as f:
             f.write("\\documentclass[]{ltjtbook}\n")
-            f.write("\\usepackage{B6tate}\n")
+            f.write("\\usepackage{../../../sty_files/B6tate}\n")
             f.write("\\title{" + self.title + "}\n")
             f.write("\\author{" + self.author + "}\n")
             f.write("\n\\begin{document}\n")

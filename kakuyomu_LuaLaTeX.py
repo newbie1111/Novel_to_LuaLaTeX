@@ -19,11 +19,24 @@ class kakuyomu_LuaLaTeX():
 
         if res.status_code == requests.codes.ok:
             self.mainSoup = BeautifulSoup(res.text, "html.parser")
+
+            if not self.isWorks_main():
+                print("not works main page")
+                quit()
+
             print("Title  : " + self.get_title())
             print("Author : " + self.get_author())
+
         else:
             print("not exist")
             quit()
+
+    # Determine if it is the main page or not
+    def isWorks_main(self):
+        if self.mainSoup.find(attrs={"data-route": "public:works:work"}) is not None:
+            return True
+        else:
+            return False
 
     # get novel title
     def get_title(self):
