@@ -116,7 +116,7 @@ class kakuyomu_LuaLaTeX():
 
 
 if __name__ == "__main__":
-    """
+    # """
     print("■■■■                                     ■                               ")
     print("■                          ■■           ■■                               ")
     print("■                          ■■           ■■■■■■    ■■■■■■■■        ■■     ")
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     print("             ■           ■■    ■        ■■        ■■■■■■■■    ■■■■■■■■ ■■")
     print("             ■          ■■   ■■■       ■                                 ")
     print("          ■■■■                                         ")
-    """
+    # """
     print("Enter the URL of the main page of the work posted on kakuyomu.")
     download_url = input()
     novelData = kakuyomu_LuaLaTeX(download_url)

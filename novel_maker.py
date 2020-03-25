@@ -27,7 +27,8 @@ class novel_maker():
             f.write("\\author{" + self.author + "}\n")
             f.write("\n\\begin{document}\n")
             f.write("\\maketitle\n")
-            f.write("\\tableofcontents\n\n")
+            f.write("\\tableofcontents\n")
+            f.write("\\newpage\n\n")
 
     def set_part(self, name):
         with open(self.save_TeX_file, "a") as f:
