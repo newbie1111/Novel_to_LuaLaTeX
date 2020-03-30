@@ -13,7 +13,7 @@
 - pathlib
 - BeautifulSoup4
 - re
-- copy
+- time
 
 ```
 pip install <"module name">
@@ -21,7 +21,7 @@ pip install <"module name">
 
 ## 使い方
 Microsoft PowerShellなどのCUIで以下を実行してください。
-
+### カクヨムの作品をダウンロードする場合
 ```
 $(任意のパス)/kakuyomu_LuaLaTeX python3 kakuyomu_LuaLaTeX.py
 
@@ -29,6 +29,16 @@ $(任意のパス)/kakuyomu_LuaLaTeX python3 kakuyomu_LuaLaTeX.py
 
 (メインページのURLを貼る)
 https://kakuyomu.jp/works/XXXXXXXXXXXXXX
+```
+
+### 小説家になろうの作品をダウンロードする場合
+```
+$(任意のパス)/kakuyomu_LuaLaTeX python3 narou_LuaLaTeX.py
+
+(中略)
+
+(メインページのURLを貼る)
+https://ncode.syosetu.com/nXXXXX/
 ```
 
 ## ライセンス
@@ -40,12 +50,9 @@ https://kakuyomu.jp/works/XXXXXXXXXXXXXX
     - 小説のタイトルが長すぎる場合、Windowsでは動かない可能性があります。
     - URLの再確認をしてください。URL末尾がコピー出来ていないなどはありませんか？
 
-- コンパイルが通らない。
-    - 必要な.styファイルなどが入っていない可能性があります。
-        ```mktexlsr```してください。
-    - プログラム上の問題である可能性が高いです。
-        ダウンロードしようとしたURL、エラーログなどを保存して、ご一報ください。
 
-- 出力されたPDFに変な文章が存在する。
+- コンパイルが通らない。出力されたPDFに変な文章が存在する。 PDFを開くことが出来ない。
+    - 必要な.styファイルなどが入っていない可能性があります。
+        sty_filesに必要な.styファイルがあるかどうか確認してください。
     - プログラム上の問題である可能性が高いです。
         ダウンロードしようとしたURL、エラーログなどを保存して、ご一報ください。

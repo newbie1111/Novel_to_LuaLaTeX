@@ -1,6 +1,8 @@
 # coding:utf-8
 import subprocess
 import pathlib
+import requests
+import re
 
 
 class novel_maker():
@@ -36,6 +38,7 @@ class novel_maker():
 
     def set_chapter(self, name):
         with open(self.save_TeX_file, "a") as f:
+            f.write("\\newpage\n")
             f.write("\\chapter{" + name + "}\n")
 
     def set_section(self, name):
@@ -49,6 +52,17 @@ class novel_maker():
     def set_text(self, text):
         with open(self.save_TeX_file, "a") as f:
             f.write(text + "\n")
+            f.write("\\newpage\n")
+
+    def save_illusts(self, illusts_url_links):
+        save_illusts_pass = self.save_dirctory + "/pic"
+        if not pathlib.Path(save_illusts_pass).exists():
+            pathlib.Path(save_illusts_pass).mkdir(parents=True)
+
+        for link in illusts_url_links:
+            name = re.sub(".*/icode/(i\d+)/", r"/\1" + ".jpg", link)
+            with open(save_illusts_pass + name, "wb") as image:
+                image.write(requests.get(link).content)
 
     def set_footer(self):
         with open(self.save_TeX_file, "a") as f:
