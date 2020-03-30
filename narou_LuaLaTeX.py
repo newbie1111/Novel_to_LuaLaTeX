@@ -60,7 +60,8 @@ class narou_LuaLaTeX():
     def get_contentsDict(self, link):
         soup = BeautifulSoup(requests.get(
             link, headers=self.header).text, "html.parser")
-        contents_dict = {"chapter": None, "title": None, "episode": None}
+        contents_dict = {"chapter": None, "title": None,
+                         "episode": None, "illust": None}
 
         chapter = soup.find("p", {"class", "chapter_title"})
         if chapter:
@@ -68,8 +69,10 @@ class narou_LuaLaTeX():
 
         contents_dict["title"] = soup.find(
             "p", {"class", "novel_subtitle"}).string
-        contents_dict["episode"] = formatter.html_to_TeX_format("\\leavevmode \\\\\n".join(
-            [str(html) for html in soup.find_all("p", id=re.compile("\d+"))]))
+        contents_dict["episode"] = "\\leavevmode \\\\\n".join(
+            [str(html) for html in soup.find_all("p", id=re.compile("\d+"))])
+        contents_dict["illust"] = [
+            "https:" + str(img["src"]) for img in soup.find_all("img", src=re.compile("icode/i\d+"))]
 
         return contents_dict
 
@@ -95,10 +98,15 @@ class narou_LuaLaTeX():
                 formatter.escape_to_TeX_format(contents["title"]))
             print("\t[subsection] -> " + contents["title"])
 
-            novel.set_text(contents["episode"])
+            if contents["illust"]:
+                novel.save_illusts(contents["illust"])
+
+            novel.set_text(formatter.html_to_TeX_format(
+                contents["episode"], image_save_pass=save_pass + title + "/pic"))
 
         novel.set_footer()
-        # novel.compile()
+
+        novel.compile()
 
 
 if __name__ == "__main__":
