@@ -1,5 +1,4 @@
 !*.py
 __pycache__
 out
-.vscode
 texput.log
