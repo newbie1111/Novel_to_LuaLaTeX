@@ -1,6 +1,3 @@
-# coding:utf-8
-
-# import
 import requests
 import pathlib
 import re
@@ -9,8 +6,6 @@ import time
 import novel_maker
 import formatter
 
-# kakuyomu_LuaLaTeX class
-
 
 class kakuyomu_LuaLaTeX():
     mainSoup = None
@@ -18,6 +13,7 @@ class kakuyomu_LuaLaTeX():
     # constructor : get mainpage html
     def __init__(self, url):
         res = requests.get(url)
+        res.encoding = res.apparent_encoding
 
         if res.status_code == requests.codes.ok:
             self.mainSoup = BeautifulSoup(res.text, "html.parser")
@@ -47,6 +43,9 @@ class kakuyomu_LuaLaTeX():
     # get novel author
     def get_author(self):
         return self.mainSoup.find("span", id="workAuthor-activityName").getText()
+
+    def get_unique_number(self):
+        return re.sub(".*/(\d+)", r"\1", self.mainSoup.find("meta", {"property": "og:url"})["content"])
 
     # get episode link hrefs list
     def get_episodeLinks(self):
@@ -78,7 +77,7 @@ class kakuyomu_LuaLaTeX():
 
     # create a pdf file by creating and compiling a .tex file.
     def set_novel(self):
-        save_pass = "./out/kakuyomu/"
+        save_pass = "./out/kakuyomu/" + self.get_unique_number()
         title = self.get_title()
         author = self.get_author()
         novel = novel_maker.novel_maker(save_pass, title, author)

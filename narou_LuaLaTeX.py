@@ -1,6 +1,3 @@
-# coding:utf-8
-
-# import
 import requests
 import pathlib
 import re
@@ -8,8 +5,6 @@ from bs4 import BeautifulSoup
 import time
 import novel_maker
 import formatter
-
-# narou_LuaLaTeX class
 
 
 class narou_LuaLaTeX():
@@ -20,6 +15,7 @@ class narou_LuaLaTeX():
     # constructor : get mainpage html
     def __init__(self, url):
         res = requests.get(url, headers=self.header)
+        res.encoding = res.apparent_encoding
 
         if res.status_code == requests.codes.ok:
             self.mainSoup = BeautifulSoup(res.text, "html.parser")
@@ -51,6 +47,9 @@ class narou_LuaLaTeX():
     def get_author(self):
         return self.mainSoup.find("div", {"class", "novel_writername"}).a.getText()
 
+    def get_unique_number(self):
+        return re.sub("/(n.+)/.+", r"\1", (self.mainSoup.select_one("dd.subtitle").a["href"]))
+
     # get episode link href list
     def get_episodeLinks(self):
         links = ["https://ncode.syosetu.com" + link.a["href"]
@@ -58,8 +57,9 @@ class narou_LuaLaTeX():
         return links
 
     def get_contentsDict(self, link):
-        soup = BeautifulSoup(requests.get(
-            link, headers=self.header).text, "html.parser")
+        res = requests.get(url=link, headers=self.header)
+        res.encoding = res.apparent_encoding
+        soup = BeautifulSoup(res.text, "html.parser")
         contents_dict = {"chapter": None, "title": None,
                          "episode": None, "illust": None}
 
@@ -78,7 +78,7 @@ class narou_LuaLaTeX():
 
     # create a pdf file by creating and compiling a .tex file.
     def set_novel(self):
-        save_pass = "./out/narou/"
+        save_pass = "./out/narou/" + self.get_unique_number()
         title = self.get_title()
         author = self.get_author()
         novel = novel_maker.novel_maker(save_pass, title, author)
