@@ -59,7 +59,8 @@ class novel_maker():
             pathlib.Path(save_illusts_pass).mkdir(parents=True)
 
         for link in illusts_url_links:
-            name = re.sub(".*/icode/(i\d+)/", r"/\1" + ".jpg", link)
+            name = re.sub(".*/icode/(.*)/", r"/\1.jpg", link)
+            name = re.sub(".*/(.*)", r"/\1", name)
             with open(save_illusts_pass + name, "wb") as image:
                 image.write(requests.get(link).content)
 
