@@ -97,6 +97,8 @@ class Kakuyomu(novel_luatex.Novel_LuaTeX):
 
                     time.sleep(1)
                     novel.set_subsection(self.get_escaped_text(ep))
+                    print("\t\t[episode] -> " + ep
+                          + "(" + tex_path + ")", end=" ")
                     if renew:
                         try:
                             prev_toc[chap][sec][ep]
@@ -108,7 +110,7 @@ class Kakuyomu(novel_luatex.Novel_LuaTeX):
                         ep_text = self.get_episode_text(
                             self.get_soup(toc[chap][sec][ep]))
                     novel.set_text(ep_text, tex_path)
-                    print("\t\t[episode] -> " + ep + "(" + tex_path + ")")
+                    print("done.")
 
         novel.end_document()
         novel.compile(batchmode)

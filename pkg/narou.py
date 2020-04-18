@@ -47,7 +47,6 @@ class Narou(novel_luatex.Novel_LuaTeX):
         return table_of_contents
 
     def get_episode_text(self, ep_soup):
-        self.set_episode_image(ep_soup)
         ep = "\\\\\n".join(
             [str(txt) for txt in ep_soup.find_all("p", id=re.compile("^L\d+"))])
 
@@ -85,6 +84,8 @@ class Narou(novel_luatex.Novel_LuaTeX):
             image_name = re.sub(".+/(i.+)/", r"\1", link) + ".pdf"
             with open(self.image_dir + "/" + image_name, "wb") as f:
                 f.write(img2pdf.convert(requests.get(image_href).content))
+                print("\t\t[image]"
+                      + "(" + str(pathlib.Path(self.image_dir + "/" + image_name).resolve()) + ")")
 
     def get_escaped_text(self, text):
         return re.sub(r"([#$%&_^{}\[\]])", r"\\\1", text)
@@ -109,6 +110,8 @@ class Narou(novel_luatex.Novel_LuaTeX):
                 tex_path = save_dir + "/ep" + str(sec_num) + ".tex"
                 sec_text = ""
 
+                print("\t[episode] -> " + sec +
+                      "(" + str(pathlib.Path(tex_path).resolve()) + ")")
                 novel.set_section(self.get_escaped_text(sec))
                 if update:
                     try:
@@ -125,7 +128,6 @@ class Narou(novel_luatex.Novel_LuaTeX):
                     sec_text = self.get_episode_text(ep_soup)
                     self.set_episode_image(ep_soup)
                 novel.set_text(sec_text, tex_path)
-                print("\t[episode] -> " + sec + "(" + tex_path + ")")
 
         novel.end_document()
         novel.compile(batchmode)
