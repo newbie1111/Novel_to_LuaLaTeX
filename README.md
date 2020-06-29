@@ -1,5 +1,5 @@
 # kakuyomu_LaTeX
-カクヨムに投稿されている作品をLuaLaTeXでPDF製本を行うpythonプログラムです。
+web小説投稿サイト「カクヨム」及び「小説化になろう」に投稿されている作品をダウンロードし、LuaLaTeXでPDF製本を行うpythonプログラムです。
 
 ## 環境とモジュール
 
@@ -15,23 +15,30 @@
 - Python 3.6.9
 - TeXLive 2019
 
-このプログラムを動かす為に必要なpythonモジュールは以下の物です。もしインストールしていないモジュールがある場合、pip3でインストール後に使用してください。
+### 実行前に確認すること
+pythonのプログラムを起動する前に、以下のライブラリがインストールされているかどうかを確認してください。
 
 - requests
-- pathlib
 - bs4 (BeautifulSoup)
-- re
-- time
 
 ```
 pip3 install <"module name">
 ```
 
+また、TeXのstyファイルが別途必要なので、広告鳥さんのブログから経由してインストールしてください。
+
+- B6tate
+- breakfbox
+- uline--
+
+TeX Liveを使用している場合、texmf-local内のlocalディレクトリにstyファイルを保存して、```mktexlsr```でstyファイルのリストを更新してから使用してください。
+
+
 ## 使い方
 Microsoft PowerShellなどのCUIで以下を実行してください。
 ### カクヨムの作品をダウンロードする場合
 ```
-$(任意)/kakuyomu_LuaLaTeX python3 kakuyomu_LuaLaTeX.py
+$(任意)/kakuyomu_LuaLaTeX python3 ./pkg/kakuyomu_LuaLaTeX.py
 
 (中略)
 
@@ -39,9 +46,11 @@ $(任意)/kakuyomu_LuaLaTeX python3 kakuyomu_LuaLaTeX.py
 https://kakuyomu.jp/works/XXXXXXXXXXXXXX
 ```
 
+カレントディレクトリの`kakuyomu`ディレクトリ内に保存されます。
+
 ### 小説家になろうの作品をダウンロードする場合
 ```
-$(任意)/kakuyomu_LuaLaTeX python3 narou_LuaLaTeX.py
+$(任意)/kakuyomu_LuaLaTeX python3 ./pkg/narou_LuaLaTeX.py
 
 (中略)
 
@@ -49,21 +58,25 @@ $(任意)/kakuyomu_LuaLaTeX python3 narou_LuaLaTeX.py
 https://ncode.syosetu.com/nXXXXX/
 ```
 
+カレントディレクトリの`narou`ディレクトリ内に保存されます。
+
 ## ライセンス
 このリポジトリにある全てのプログラムはMITライセンスを持ちます。
 
 ## 予想されるエラー
 
-
-
 - メインページのURLを入力したのに、プログラムが動かない
-    - 小説のタイトルが長すぎる場合、Windowsでは動かない可能性があります。
+    - URLの再確認をしてください。
+    - 実行したプログラムが間違っていないか確認してください。
+    - ライブラリがインストールされていないか、別のpythonにインストールされていないかを確認してください。
 
-    - URLの再確認をしてください。URL末尾がコピー出来ていないなどはありませんか？
 
 - コンパイルが通らない。出力されたPDFに変な文章が存在する。 PDFを開くことが出来ない。
     - 必要な.styファイルなどが入っていない可能性があります。
         sty_filesに必要な.styファイルがあるかどうか確認してください。
 
-    - プログラム上の問題である可能性が高いです。
-        ダウンロードしようとしたURL、エラーログなどを保存して、ご一報ください。
+- 出力された文書に想定されていない文が存在する（HTML構文など）。
+    明らかに文章が抜け落ちている
+    - バグなので報告してください。
+
+その他、何か問題がある場合は該当の作品URLを添付の上、報告していただけると幸いです。
