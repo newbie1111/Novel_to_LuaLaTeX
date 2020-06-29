@@ -110,8 +110,6 @@ class Narou(novel_luatex.Novel_LuaTeX):
                 tex_path = save_dir + "/ep" + str(sec_num) + ".tex"
                 sec_text = ""
 
-                print("\t[episode] -> " + sec +
-                      "(" + str(pathlib.Path(tex_path).resolve()) + ")")
                 novel.set_section(self.get_escaped_text(sec))
                 if update:
                     try:
@@ -122,11 +120,16 @@ class Narou(novel_luatex.Novel_LuaTeX):
                         ep_soup = self.get_soup(toc[chap][sec])
                         sec_text = self.get_episode_text(ep_soup)
                         self.set_episode_image(ep_soup)
+                    print("\t[episode] -> " + sec +
+                          "(" + str(pathlib.Path(tex_path).resolve()) + ")")
                 else:
                     time.sleep(1)
                     ep_soup = self.get_soup(toc[chap][sec])
                     sec_text = self.get_episode_text(ep_soup)
                     self.set_episode_image(ep_soup)
+                    print("\t[episode] -> " + sec +
+                          "(" + str(pathlib.Path(tex_path).resolve()) + ")")
+
                 novel.set_text(sec_text, tex_path)
 
         novel.end_document()
