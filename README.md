@@ -1,4 +1,4 @@
-# kakuyomu_LaTeX
+# Novel_to_LuaLaTeX
 web小説投稿サイト「カクヨム」及び「小説化になろう」に投稿されている作品をダウンロードし、LuaLaTeXでPDF製本を行うpythonプログラムです。
 
 ## 環境とモジュール
